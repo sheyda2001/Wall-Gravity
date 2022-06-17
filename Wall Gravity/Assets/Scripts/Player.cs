@@ -34,67 +34,29 @@ public class Player : MonoBehaviour
             groundedPlayer = controller.isGrounded;
         }
 
-        if (gravityAxis == (int) GravityAxis.y)
+        if (groundedPlayer && playerVelocity.y <= 0)
         {
-            if (groundedPlayer && playerVelocity.y <= 0)
-            {
-                playerVelocityChanged = false;
-                playerVelocity.y = 0f;
-            }
-
-            if (playerVelocity.y > 0)
-            {
-                playerVelocityChanged = true;
-            }
-
-            Vector3 move = new Vector3(Input.GetAxis("Horizontal"), 0, 0);
-
-            controller.Move(move * Time.deltaTime * playerSpeed);
-
-            if (move != Vector3.zero)
-            {
-                gameObject.transform.forward = move;
-            }
-
-            // Changes the height position of the player..
-            if (Input.GetButtonDown("Jump") && groundedPlayer)
-            {
-                playerVelocity.y += Mathf.Sqrt(jumpHeight * -3.0f * gravityValue);
-            }
-
-            playerVelocity.y += gravityValue * Time.deltaTime;
-            controller.Move(playerVelocity * Time.deltaTime);
+            playerVelocityChanged = false;
+            playerVelocity.y = 0f;
         }
-        else
+
+        if (playerVelocity.y > 0)
         {
-            if (groundedPlayer && playerVelocity.x <= 0)
-            {
-                playerVelocityChanged = false;
-                playerVelocity.x = 0f;
-            }
-
-            if (playerVelocity.x > 0)
-            {
-                playerVelocityChanged = true;
-            }
-
-            Vector3 move = new Vector3(0, Input.GetAxis("Vertical"), 0);
-
-            controller.Move(move * Time.deltaTime * playerSpeed);
-
-            if (move != Vector3.zero)
-            {
-                gameObject.transform.forward = move;
-            }
-
-            // Changes the height position of the player...
-            if (Input.GetButtonDown("Jump") && groundedPlayer)
-            {
-                playerVelocity.x += Mathf.Sqrt(jumpHeight * -3.0f * gravityValue);
-            }
-
-            playerVelocity.x += gravityValue * Time.deltaTime;
+            playerVelocityChanged = true;
         }
+
+        Vector3 move = new Vector3(Input.GetAxis("Horizontal"), 0, 0);
+
+        controller.Move(move * Time.deltaTime * playerSpeed);
+
+        if (move != Vector3.zero)
+        {
+            gameObject.transform.forward = move;
+        }
+
+        playerVelocity.y += gravityValue * Time.deltaTime;
+        controller.Move(playerVelocity * Time.deltaTime);
+
     }
 
     private void OnCollisionEnter(Collision collision)
